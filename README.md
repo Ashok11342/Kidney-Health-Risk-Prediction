@@ -1,5 +1,5 @@
 # Kidney Health Risk Prediction
-
+Live Demo : https://kidney-health-risk-prediction.streamlit.app/
 ## Project Overview
 
 This project implements a machine learning model to predict kidney health risks based on medical CT scan images. Using a deep learning approach with a ResNet50 architecture and reinforcement learning techniques, the system can classify kidney scans into four categories: normal, cyst, stone, and tumor. The application provides an interactive web interface built with Streamlit that allows medical professionals to upload kidney CT scan images and receive instant predictions with confidence scores.
