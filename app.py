@@ -36,19 +36,27 @@ Enter your information below to get a personalized risk assessment.
 def get_model():
     """Load the model or return None if it fails"""
     try:
-        return load_model()
+        model = load_model()
+        # Check if this is a dummy model by looking at its architecture
+        if len(model.layers) <= 4:  # Dummy model has input + 2 dense + output = 4 layers
+            st.warning("⚠️ Using a simplified test model. Predictions are for demonstration only.")
+            return model, True
+        return model, False
     except Exception as e:
         st.error(f"Error loading model: {e}")
         logging.error(f"Error loading model: {e}")
-        return None
+        return None, True
 
 # Try to load the model
-model = get_model()
+model, is_dummy_model = get_model()
 
-# Demo mode flag when model is not available
-demo_mode = model is None
+# Demo mode flag when model is not available or is a dummy
+demo_mode = model is None or is_dummy_model
 if demo_mode:
-    st.warning("⚠️ Running in DEMO MODE - The model could not be loaded. Using simulated predictions.")
+    if model is None:
+        st.warning("⚠️ Running in DEMO MODE - The model could not be loaded. Using simulated predictions.")
+    else:
+        st.warning("⚠️ Running with a SIMPLIFIED MODEL for demonstration purposes only.")
 
 # Create sidebar for inputs
 st.sidebar.header("Patient Information")
@@ -122,9 +130,14 @@ if submitted:
     with st.spinner("Analyzing your data..."):
         try:
             # Make prediction
-            if not demo_mode and model is not None:
-                prediction = model.predict(features)
+            if model is not None:
+                prediction = model.predict(features, verbose=0)  # Add verbose=0 to suppress prediction logs
                 risk_score = prediction[0][0]  # Adjust based on your model output
+                
+                # If using dummy model, incorporate some randomness to simulate variability
+                if is_dummy_model:
+                    # Add a note about the model being a simplified version
+                    st.info("ℹ️ This prediction is made with a simplified model and should be considered for demonstration purposes only.")
             else:
                 # Demo mode - calculate a simulated risk score based on input values
                 base_risk = 0.2
@@ -265,7 +278,7 @@ if submitted:
             
             # Show demo mode notice again if active
             if demo_mode:
-                st.warning("⚠️ DEMO MODE: This is a simulated result as the model could not be loaded.")
+                st.warning("⚠️ REMINDER: This prediction is using a simplified model for demonstration purposes.")
             
         except Exception as e:
             st.error(f"Error during prediction: {e}")
