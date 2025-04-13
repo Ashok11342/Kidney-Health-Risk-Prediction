@@ -7,18 +7,18 @@ import logging
 
 def download_model_if_needed():
     """Downloads the model file if it's not already present."""
-    if not os.path.exists('model/kidney_model.h5'):
+    if not os.path.exists('dqn_resnet_model.h5'):
         logging.info("Model file not found. Attempting to download...")
         os.makedirs('model', exist_ok=True)
         
         # Option 1: Use gdown to download from Google Drive
-        # url = 'YOUR_GOOGLE_DRIVE_SHARING_URL'
-        # output = 'model/kidney_model.h5'
-        # gdown.download(url, output, quiet=False)
+        url = 'https://drive.google.com/file/d/1u2lFcIIZcKEuqsEg0B_ah7SWAM1t2PGm/view?usp=sharing'
+        output = 'model/kidney_model.h5'
+        gdown.download(url, output, quiet=False)
         
         # Option 2: Message to manually place the model file
-        logging.warning("Please manually place the kidney_model.h5 file in the model directory.")
-        return False
+        # logging.warning("Please manually place the kidney_model.h5 file in the model directory.")
+        # return False
     return True
 
 def load_model():
