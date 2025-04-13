@@ -10,7 +10,6 @@ import io
 import os
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import gdown  # For downloading from Google Drive
 
 # Set page title and config
 st.set_page_config(
@@ -25,37 +24,10 @@ st.write("Upload a CT scan image to predict the kidney condition")
 # Define class names
 CLASS_NAMES = ['cyst', 'normal', 'stone', 'tumor']
 
-# Function to download model file from Google Drive if not present
-@st.cache_resource
-def download_model_if_needed():
+# Simple function to check if model exists
+def check_model_exists():
     model_path = 'dqn_resnet_model.h5'
-    if not os.path.exists(model_path):
-        try:
-            st.info("Downloading model file. This may take a moment...")
-            # Extract the file ID from the Google Drive sharing link
-            file_id = "1u2lFcIIZcKEuqsEg0B_ah7SWAM1t2PGm"
-            
-            # Use the correct URL format for gdown
-            drive_url = f"https://drive.google.com/uc?id={file_id}"
-            
-            # Download the file with fuzzy=True option to handle Google Drive's download page
-            gdown.download(drive_url, model_path, quiet=False, fuzzy=True)
-            
-            # Verify the downloaded file is valid
-            if os.path.exists(model_path) and os.path.getsize(model_path) > 1000000:  # File should be at least 1MB
-                st.success("Model downloaded successfully")
-                return True
-            else:
-                st.error("Downloaded file is not valid or too small")
-                if os.path.exists(model_path):
-                    os.remove(model_path)  # Remove invalid file
-                return False
-        except Exception as e:
-            st.error(f"Error downloading model: {str(e)}")
-            if os.path.exists(model_path):
-                os.remove(model_path)  # Remove potentially corrupted file
-            return False
-    return True
+    return os.path.exists(model_path)
 
 # Create model architecture (matching the original training architecture)
 @st.cache_resource
@@ -97,21 +69,16 @@ def predict_disease(img):
     # Get models
     combined_model, _ = create_model()
     
-    # Ensure model is downloaded
-    model_downloaded = download_model_if_needed()
-    
     # Check if weights file exists
     model_path = 'dqn_resnet_model.h5'
-    if model_downloaded and os.path.exists(model_path):
+    if check_model_exists():
         try:
-            # Try to load weights instead of the full model
+            # Try to load weights
             combined_model.load_weights(model_path, by_name=True, skip_mismatch=True)
-            st.success("Model weights loaded successfully")
         except Exception as e:
-            st.error(f"Error loading model weights: {str(e)}")
-            st.warning("Using untrained model for demonstration purposes")
+            st.warning("Using untrained model for demonstration purposes.")
     else:
-        st.warning("Using untrained model for demonstration purposes. Predictions may not be accurate.")
+        st.warning("Model file not found. Using untrained model for demonstration purposes.")
     
     # Get prediction (Q-values)
     q_values = combined_model.predict(preprocessed_img, verbose=0)[0]
