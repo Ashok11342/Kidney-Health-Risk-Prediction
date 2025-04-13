@@ -74,6 +74,7 @@ This will install all necessary dependencies, including:
 - scikit-learn (for data preprocessing and additional ML utilities)
 - Plotly (for interactive visualizations)
 - Pillow (for image processing)
+-gdown(for downloading .h5 model file)
 
 ## Running the Application Locally
 

@@ -2,23 +2,32 @@ import os
 import tensorflow as tf
 import logging
 
-# Optional: For downloading the model if needed
-# import gdown
+# Uncomment this line to enable gdown
+import gdown
 
 def download_model_if_needed():
     """Downloads the model file if it's not already present."""
-    if not os.path.exists('dqn_resnet_model.h5'):
+    if not os.path.exists('model/kidney_model.h5'):
         logging.info("Model file not found. Attempting to download...")
         os.makedirs('model', exist_ok=True)
         
         # Option 1: Use gdown to download from Google Drive
-        url = 'https://drive.google.com/file/d/1u2lFcIIZcKEuqsEg0B_ah7SWAM1t2PGm/view?usp=sharing'
-        output = 'model/kidney_model.h5'
-        gdown.download(url, output, quiet=False)
-        
-        # Option 2: Message to manually place the model file
-        # logging.warning("Please manually place the kidney_model.h5 file in the model directory.")
-        # return False
+        try:
+            # For Google Drive, convert the sharing URL to the direct download format
+            # Example: From https://drive.google.com/file/d/FILEID/view?usp=sharing
+            # To: https://drive.google.com/uc?id=FILEID
+            
+            # Replace this with your actual Google Drive file ID
+            # Extract this from your Google Drive sharing link
+            url = 'https://drive.google.com/file/d/1u2lFcIIZcKEuqsEg0B_ah7SWAM1t2PGm/view?usp=sharing'
+            output = 'model/kidney_model.h5'
+            gdown.download(url, output, quiet=False)
+            logging.info("Model downloaded successfully!")
+            return True
+        except Exception as e:
+            logging.error(f"Failed to download model: {e}")
+            logging.warning("Please manually place the kidney_model.h5 file in the model directory.")
+            return False
     return True
 
 def load_model():

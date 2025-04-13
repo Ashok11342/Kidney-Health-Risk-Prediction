@@ -10,7 +10,11 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Import model loader
-from model.model_loader import load_model, get_model_summary
+try:
+    from model.model_loader import load_model, get_model_summary
+except Exception as e:
+    st.error(f"Error importing model loader: {e}")
+    logging.error(f"Error importing model loader: {e}")
 
 # Page config
 st.set_page_config(
@@ -30,14 +34,21 @@ Enter your information below to get a personalized risk assessment.
 # Load model (in a way that it's only loaded once)
 @st.cache_resource
 def get_model():
+    """Load the model or return None if it fails"""
     try:
         return load_model()
     except Exception as e:
         st.error(f"Error loading model: {e}")
+        logging.error(f"Error loading model: {e}")
         return None
 
 # Try to load the model
 model = get_model()
+
+# Demo mode flag when model is not available
+demo_mode = model is None
+if demo_mode:
+    st.warning("⚠️ Running in DEMO MODE - The model could not be loaded. Using simulated predictions.")
 
 # Create sidebar for inputs
 st.sidebar.header("Patient Information")
@@ -90,126 +101,175 @@ if submitted:
         1 if coronary_artery_disease else 0
     ]])
     
-    # Check if model is loaded
-    if model is not None:
-        with st.spinner("Analyzing your data..."):
+    # Track patient data for visualization
+    patient_data = {
+        'age': age,
+        'gender': gender,
+        'blood_pressure': blood_pressure,
+        'blood_glucose': blood_glucose,
+        'blood_urea': blood_urea,
+        'serum_creatinine': serum_creatinine,
+        'sodium': sodium,
+        'potassium': potassium,
+        'hemoglobin': hemoglobin,
+        'albumin': albumin,
+        'diabetes': diabetes,
+        'hypertension': hypertension,
+        'coronary_artery_disease': coronary_artery_disease
+    }
+    
+    # Use model for prediction if available, otherwise use demo calculations
+    with st.spinner("Analyzing your data..."):
+        try:
             # Make prediction
-            try:
+            if not demo_mode and model is not None:
                 prediction = model.predict(features)
                 risk_score = prediction[0][0]  # Adjust based on your model output
+            else:
+                # Demo mode - calculate a simulated risk score based on input values
+                base_risk = 0.2
                 
-                # Display results
-                col1, col2 = st.columns(2)
+                # Age factor (higher age = higher risk)
+                age_factor = min(1.0, age / 100) * 0.3
                 
-                with col1:
-                    # Risk gauge
-                    fig = go.Figure(go.Indicator(
-                        mode = "gauge+number",
-                        value = risk_score * 100,
-                        title = {'text': "Kidney Disease Risk"},
-                        domain = {'x': [0, 1], 'y': [0, 1]},
-                        gauge = {
-                            'axis': {'range': [0, 100]},
-                            'bar': {'color': "darkblue"},
-                            'steps': [
-                                {'range': [0, 30], 'color': "green"},
-                                {'range': [30, 70], 'color': "yellow"},
-                                {'range': [70, 100], 'color': "red"}
-                            ],
-                            'threshold': {
-                                'line': {'color': "red", 'width': 4},
-                                'thickness': 0.75,
-                                'value': risk_score * 100
-                            }
-                        }
-                    ))
-                    
-                    st.plotly_chart(fig, use_container_width=True)
-                    
-                    # Risk interpretation
-                    if risk_score < 0.3:
-                        risk_level = "Low"
-                        st.success("Your kidney disease risk is relatively low.")
-                    elif risk_score < 0.7:
-                        risk_level = "Moderate"
-                        st.warning("Your kidney disease risk is moderate. Consider consulting with a healthcare provider.")
-                    else:
-                        risk_level = "High"
-                        st.error("Your kidney disease risk is high. Please consult with a healthcare provider as soon as possible.")
+                # Medical conditions
+                conditions_factor = 0
+                if diabetes:
+                    conditions_factor += 0.15
+                if hypertension:
+                    conditions_factor += 0.15
+                if coronary_artery_disease:
+                    conditions_factor += 0.1
                 
-                with col2:
-                    # Contributing factors chart
-                    st.subheader("Contributing Risk Factors")
-                    
-                    # This is a simplified example. In a real app, you would have model-specific logic
-                    # to determine the contribution of each factor
-                    risk_factors = {
-                        "Age": 0.2 if age > 60 else 0.1,
-                        "Blood Pressure": 0.3 if blood_pressure > 140 else 0.1,
-                        "Blood Glucose": 0.25 if blood_glucose > 120 else 0.05,
-                        "Serum Creatinine": 0.4 if serum_creatinine > 1.2 else 0.1,
-                        "Hemoglobin": 0.2 if hemoglobin < 12 else 0.05,
-                        "Albumin": 0.1 * albumin
-                    }
-                    
-                    # Add medical history factors
-                    if diabetes:
-                        risk_factors["Diabetes"] = 0.3
-                    if hypertension:
-                        risk_factors["Hypertension"] = 0.25
-                    if coronary_artery_disease:
-                        risk_factors["CAD"] = 0.2
-                    
-                    # Create bar chart
-                    factors_df = pd.DataFrame({
-                        'Factor': list(risk_factors.keys()),
-                        'Contribution': list(risk_factors.values())
-                    })
-                    
-                    factors_df = factors_df.sort_values('Contribution', ascending=False)
-                    
-                    fig = px.bar(
-                        factors_df, 
-                        x='Contribution', 
-                        y='Factor', 
-                        orientation='h',
-                        color='Contribution',
-                        color_continuous_scale=['green', 'yellow', 'red']
-                    )
-                    
-                    st.plotly_chart(fig, use_container_width=True)
-                    
-                # Recommendations
-                st.subheader("Health Recommendations")
-                st.write("Based on your risk assessment, here are some recommendations:")
-                
-                recommendations = []
-                
-                if blood_pressure > 130:
-                    recommendations.append("Work on lowering your blood pressure through diet, exercise, and possibly medication.")
-                if blood_glucose > 110:
-                    recommendations.append("Monitor your blood glucose levels and consider consulting with a healthcare provider.")
+                # Lab values
+                lab_factor = 0
+                if blood_pressure > 140:
+                    lab_factor += 0.1
+                if blood_glucose > 120:
+                    lab_factor += 0.1
                 if serum_creatinine > 1.2:
-                    recommendations.append("Your creatinine level is elevated, which may indicate reduced kidney function.")
+                    lab_factor += 0.15
                 if albumin > 0:
-                    recommendations.append("The presence of albumin in urine could indicate kidney damage.")
+                    lab_factor += 0.05 * albumin
                 
-                # Add general recommendations
-                recommendations.append("Stay hydrated by drinking plenty of water throughout the day.")
-                recommendations.append("Maintain a balanced, kidney-friendly diet low in sodium.")
-                recommendations.append("Exercise regularly to maintain a healthy weight and improve overall health.")
+                # Calculate final simulated risk
+                risk_score = min(0.95, base_risk + age_factor + conditions_factor + lab_factor)
+            
+            # Display results
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Risk gauge
+                fig = go.Figure(go.Indicator(
+                    mode = "gauge+number",
+                    value = risk_score * 100,
+                    title = {'text': "Kidney Disease Risk"},
+                    domain = {'x': [0, 1], 'y': [0, 1]},
+                    gauge = {
+                        'axis': {'range': [0, 100]},
+                        'bar': {'color': "darkblue"},
+                        'steps': [
+                            {'range': [0, 30], 'color': "green"},
+                            {'range': [30, 70], 'color': "yellow"},
+                            {'range': [70, 100], 'color': "red"}
+                        ],
+                        'threshold': {
+                            'line': {'color': "red", 'width': 4},
+                            'thickness': 0.75,
+                            'value': risk_score * 100
+                        }
+                    }
+                ))
                 
-                # Display recommendations
-                for i, rec in enumerate(recommendations, 1):
-                    st.write(f"{i}. {rec}")
+                st.plotly_chart(fig, use_container_width=True)
                 
-                # Disclaimer
-                st.info("Disclaimer: This tool provides an estimate based on the information provided and should not be considered a medical diagnosis. Always consult with a healthcare professional for proper medical advice.")
+                # Risk interpretation
+                if risk_score < 0.3:
+                    risk_level = "Low"
+                    st.success("Your kidney disease risk is relatively low.")
+                elif risk_score < 0.7:
+                    risk_level = "Moderate"
+                    st.warning("Your kidney disease risk is moderate. Consider consulting with a healthcare provider.")
+                else:
+                    risk_level = "High"
+                    st.error("Your kidney disease risk is high. Please consult with a healthcare provider as soon as possible.")
+            
+            with col2:
+                # Contributing factors chart
+                st.subheader("Contributing Risk Factors")
                 
-            except Exception as e:
-                st.error(f"Error during prediction: {e}")
-    else:
-        st.error("Model could not be loaded. Please contact the administrator.")
+                # This is a simplified example. In a real app, you would have model-specific logic
+                # to determine the contribution of each factor
+                risk_factors = {
+                    "Age": 0.2 if age > 60 else 0.1,
+                    "Blood Pressure": 0.3 if blood_pressure > 140 else 0.1,
+                    "Blood Glucose": 0.25 if blood_glucose > 120 else 0.05,
+                    "Serum Creatinine": 0.4 if serum_creatinine > 1.2 else 0.1,
+                    "Hemoglobin": 0.2 if hemoglobin < 12 else 0.05,
+                    "Albumin": 0.1 * albumin
+                }
+                
+                # Add medical history factors
+                if diabetes:
+                    risk_factors["Diabetes"] = 0.3
+                if hypertension:
+                    risk_factors["Hypertension"] = 0.25
+                if coronary_artery_disease:
+                    risk_factors["CAD"] = 0.2
+                
+                # Create bar chart
+                factors_df = pd.DataFrame({
+                    'Factor': list(risk_factors.keys()),
+                    'Contribution': list(risk_factors.values())
+                })
+                
+                factors_df = factors_df.sort_values('Contribution', ascending=False)
+                
+                fig = px.bar(
+                    factors_df, 
+                    x='Contribution', 
+                    y='Factor', 
+                    orientation='h',
+                    color='Contribution',
+                    color_continuous_scale=['green', 'yellow', 'red']
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+                
+            # Recommendations
+            st.subheader("Health Recommendations")
+            st.write("Based on your risk assessment, here are some recommendations:")
+            
+            recommendations = []
+            
+            if blood_pressure > 130:
+                recommendations.append("Work on lowering your blood pressure through diet, exercise, and possibly medication.")
+            if blood_glucose > 110:
+                recommendations.append("Monitor your blood glucose levels and consider consulting with a healthcare provider.")
+            if serum_creatinine > 1.2:
+                recommendations.append("Your creatinine level is elevated, which may indicate reduced kidney function.")
+            if albumin > 0:
+                recommendations.append("The presence of albumin in urine could indicate kidney damage.")
+            
+            # Add general recommendations
+            recommendations.append("Stay hydrated by drinking plenty of water throughout the day.")
+            recommendations.append("Maintain a balanced, kidney-friendly diet low in sodium.")
+            recommendations.append("Exercise regularly to maintain a healthy weight and improve overall health.")
+            
+            # Display recommendations
+            for i, rec in enumerate(recommendations, 1):
+                st.write(f"{i}. {rec}")
+            
+            # Disclaimer
+            st.info("Disclaimer: This tool provides an estimate based on the information provided and should not be considered a medical diagnosis. Always consult with a healthcare professional for proper medical advice.")
+            
+            # Show demo mode notice again if active
+            if demo_mode:
+                st.warning("⚠️ DEMO MODE: This is a simulated result as the model could not be loaded.")
+            
+        except Exception as e:
+            st.error(f"Error during prediction: {e}")
+            logging.error(f"Error during prediction: {e}")
 else:
     # Initial state or after resetting
     st.info("Enter your information in the sidebar and click 'Predict Risk' to get your assessment.")
