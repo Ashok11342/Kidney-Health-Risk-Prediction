@@ -1,0 +1,134 @@
+Found 8710 images belonging to 4 classes.
+Found 1865 images belonging to 4 classes.
+Found 1871 images belonging to 4 classes.
+2025-04-01 14:33:31.074626: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-Found 1871 images belonging to 4 classes.
+2025-04-01 14:33:31.074626: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-2025-04-01 14:33:31.074626: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-is TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+other operations, rebuild TensorFlow with the appropriate compiler flags.
+Downloading data from https://storage.googleapis.com/tensorflow/keras-applications/resnet/resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5
+94765736/94765736 ━━━━━━━━━━━━━━━━━━━━ 56s 1us/step
+Epoch 1/10, Avg Reward: 0.2629, Epsilon: 0.9950
+Validation Accuracy: 0.9920
+Epoch 2/10, Avg Reward: 0.2528, Epsilon: 0.9900
+Validation Accuracy: 0.9962
+Epoch 3/10, Avg Reward: 0.2635, Epsilon: 0.9851
+Validation Accuracy: 0.9989
+other operations, rebuild TensorFlow with the appropriate compiler flags.
+Downloading data from https://storage.googleapis.com/tensorflow/keras-applications/resnet/resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5
+94765736/94765736 ━━━━━━━━━━━━━━━━━━━━ 56s 1us/step
+Epoch 1/10, Avg Reward: 0.2629, Epsilon: 0.9950
+Validation Accuracy: 0.9920
+Epoch 2/10, Avg Reward: 0.2528, Epsilon: 0.9900
+Validation Accuracy: 0.9962
+Epoch 3/10, Avg Reward: 0.2635, Epsilon: 0.9851
+Validation Accuracy: 0.9989
+Epoch 4/10, Avg Reward: 0.2639, Epsilon: 0.9801
+Validation Accuracy: 0.9995
+Epoch 5/10, Avg Reward: 0.2665, Epsilon: 0.9752
+Validation Accuracy: 1.0000
+Epoch 6/10, Avg Reward: 0.2704, Epsilon: 0.9704
+Validation Accuracy: 0.9989
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+other operations, rebuild TensorFlow with the appropriate compiler flags.
+Downloading data from https://storage.googleapis.com/tensorflow/keras-applications/resnet/resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5
+94765736/94765736 ━━━━━━━━━━━━━━━━━━━━ 56s 1us/step
+Epoch 1/10, Avg Reward: 0.2629, Epsilon: 0.9950
+Validation Accuracy: 0.9920
+Epoch 2/10, Avg Reward: 0.2528, Epsilon: 0.9900
+Validation Accuracy: 0.9962
+Epoch 3/10, Avg Reward: 0.2635, Epsilon: 0.9851
+Validation Accuracy: 0.9989
+Epoch 4/10, Avg Reward: 0.2639, Epsilon: 0.9801
+Validation Accuracy: 0.9995
+Epoch 5/10, Avg Reward: 0.2665, Epsilon: 0.9752
+Validation Accuracy: 1.0000
+Epoch 6/10, Avg Reward: 0.2704, Epsilon: 0.9704
+other operations, rebuild TensorFlow with the appropriate compiler flags.
+Downloading data from https://storage.googleapis.com/tensorflow/keras-applications/resnet/resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5
+94765736/94765736 ━━━━━━━━━━━━━━━━━━━━ 56s 1us/step
+Epoch 1/10, Avg Reward: 0.2629, Epsilon: 0.9950
+Validation Accuracy: 0.9920
+Epoch 2/10, Avg Reward: 0.2528, Epsilon: 0.9900
+Validation Accuracy: 0.9962
+Epoch 3/10, Avg Reward: 0.2635, Epsilon: 0.9851
+Validation Accuracy: 0.9989
+Epoch 4/10, Avg Reward: 0.2639, Epsilon: 0.9801
+Validation Accuracy: 0.9995
+Epoch 5/10, Avg Reward: 0.2665, Epsilon: 0.9752
+other operations, rebuild TensorFlow with the appropriate compiler flags.
+Downloading data from https://storage.googleapis.com/tensorflow/keras-applications/resnet/resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5
+94765736/94765736 ━━━━━━━━━━━━━━━━━━━━ 56s 1us/step
+Epoch 1/10, Avg Reward: 0.2629, Epsilon: 0.9950
+Validation Accuracy: 0.9920
+Epoch 2/10, Avg Reward: 0.2528, Epsilon: 0.9900
+Validation Accuracy: 0.9962
+Epoch 3/10, Avg Reward: 0.2635, Epsilon: 0.9851
+Validation Accuracy: 0.9989
+Epoch 4/10, Avg Reward: 0.2639, Epsilon: 0.9801
+94765736/94765736 ━━━━━━━━━━━━━━━━━━━━ 56s 1us/step
+Epoch 1/10, Avg Reward: 0.2629, Epsilon: 0.9950
+Validation Accuracy: 0.9920
+Epoch 2/10, Avg Reward: 0.2528, Epsilon: 0.9900
+Validation Accuracy: 0.9962
+Epoch 3/10, Avg Reward: 0.2635, Epsilon: 0.9851
+Validation Accuracy: 0.9989
+Validation Accuracy: 0.9920
+Epoch 2/10, Avg Reward: 0.2528, Epsilon: 0.9900
+Validation Accuracy: 0.9962
+Epoch 3/10, Avg Reward: 0.2635, Epsilon: 0.9851
+Validation Accuracy: 0.9989
+Validation Accuracy: 0.9962
+Epoch 3/10, Avg Reward: 0.2635, Epsilon: 0.9851
+Validation Accuracy: 0.9989
+Epoch 4/10, Avg Reward: 0.2639, Epsilon: 0.9801
+Validation Accuracy: 0.9995
+Validation Accuracy: 0.9989
+Epoch 4/10, Avg Reward: 0.2639, Epsilon: 0.9801
+Validation Accuracy: 0.9995
+Epoch 4/10, Avg Reward: 0.2639, Epsilon: 0.9801
+Validation Accuracy: 0.9995
+Epoch 5/10, Avg Reward: 0.2665, Epsilon: 0.9752
+Validation Accuracy: 1.0000
+Epoch 6/10, Avg Reward: 0.2704, Epsilon: 0.9704
+Validation Accuracy: 0.9989
+Epoch 5/10, Avg Reward: 0.2665, Epsilon: 0.9752
+Validation Accuracy: 1.0000
+Epoch 6/10, Avg Reward: 0.2704, Epsilon: 0.9704
+Validation Accuracy: 0.9989
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+Validation Accuracy: 0.9995
+Epoch 8/10, Avg Reward: 0.2727, Epsilon: 0.9607
+Validation Accuracy: 1.0000
+Epoch 9/10, Avg Reward: 0.2834, Epsilon: 0.9559
+Validation Accuracy: 1.0000
+Epoch 10/10, Avg Reward: 0.2770, Epsilon: 0.9511
+Validation Accuracy: 0.9995
+
+Test Set Evaluation:
+Accuracy: 0.9994655264564404
+Precision: 0.9996727748691099
+Recall: 0.9987980769230769
+F1_score: 0.9992338706495925
+
+
+
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+Epoch 7/10, Avg Reward: 0.2690, Epsilon: 0.9655
+Validation Accuracy: 0.9995
+Epoch 8/10, Avg Reward: 0.2727, Epsilon: 0.9607
+Validation Accuracy: 1.0000
+Epoch 9/10, Avg Reward: 0.2834, Epsilon: 0.9559
+Validation Accuracy: 1.0000
+Epoch 10/10, Avg Reward: 0.2770, Epsilon: 0.9511
+Validation Accuracy: 0.9995
+
+Test Set Evaluation:
+Accuracy: 0.9994655264564404
+Precision: 0.9996727748691099
+Recall: 0.9987980769230769
+F1_score: 0.9992338706495925
