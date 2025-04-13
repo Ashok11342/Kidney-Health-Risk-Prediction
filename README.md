@@ -21,9 +21,6 @@ Kidney-Health-Risk-Prediction/
 ├── disease_classifer.py     # Model training script
 ├── dqn_resnet_model.h5      # Trained deep learning model
 ├── requirements.txt         # Project dependencies
-├── .streamlit/              # Streamlit configuration
-├── model/                   # Model directory
-├── utils/                   # Utility functions
 ├── output.txt               # Training logs
 ├── output while training.png # Training visualization
 ├── heatmap.png              # Confusion matrix visualization
@@ -77,7 +74,7 @@ This will install all necessary dependencies, including:
 - scikit-learn (for data preprocessing)
 - Plotly (for interactive visualizations)
 - Pillow (for image processing)
-- gdown (for downloading model files if needed)
+
 
 ## Running the Application
 
@@ -110,11 +107,3 @@ If you want to retrain the model with your own dataset:
    ```bash
    python disease_classifer.py
    ```
-
-## License
-
-[Include your license information here]
-
-## Contact
-
-[Your contact information] 
